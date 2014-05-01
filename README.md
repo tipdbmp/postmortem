@@ -53,6 +53,27 @@ Postmortem:
 
  <- main::i_return_nothing()
 
+
+ # You can see how a recursive function recurses
+fact(4);
+sub fact { my ($n) = @_;
+    $n > 1 ? $n * fact($n - 1) : 1;
+}
+use Postmortem;
+# Output
+24
+
+
+Postmortem:
+
+24 <- main::fact(4)
+
+    6 <- main::fact(3)
+
+        2 <- main::fact(2)
+
+            1 <- main::fact(1)
+
 ```
 
 ### Caveats

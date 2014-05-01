@@ -4,16 +4,16 @@
 		"selected_items":
 		[
 			[
+				"i",
+				"i_return_nothing"
+			],
+			[
 				"dt",
 				"dt_now"
 			],
 			[
 				"post",
 				"postmortem_msgs"
-			],
-			[
-				"i",
-				"i_copy"
 			],
 			[
 				"pos",
@@ -520,10 +520,19 @@
 	"buffers":
 	[
 		{
+			"contents": "I am foo and I return this string\n\n\nPostmortem:\n\n'I am foo and I return this string' <- main::foo()\n\n    [1,2,3,4], [5,6,7,8,9] <- main::bar()\n\n        {'b' => 2,'a' => 1} <- main::baz()\n\n[1,2,3,4], [5,6,7,8,9] <- main::bar([0,1,2,3,4], {'b' => 2,'a' => 1})\n\n    {'a' => 1,'b' => 2} <- main::baz()\n\n{'b' => 2,'a' => 1} <- main::baz()\n\n <- main::i_return_nothing()\n\n[Finished in 0.4s]",
+			"settings":
+			{
+				"buffer_size": 383,
+				"line_ending": "Windows",
+				"name": "Build output"
+			}
+		},
+		{
 			"file": "subs.pl",
 			"settings":
 			{
-				"buffer_size": 1714,
+				"buffer_size": 683,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,15 +540,7 @@
 			"file": "Postmortem.pm",
 			"settings":
 			{
-				"buffer_size": 5488,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "README.md",
-			"settings":
-			{
-				"buffer_size": 426,
+				"buffer_size": 4880,
 				"line_ending": "Windows"
 			}
 		}
@@ -547,9 +548,13 @@
 	"build_system": "Packages/Perl/Perl.sublime-build",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 81.0,
 		"selected_items":
 		[
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -609,10 +614,6 @@
 			[
 				"menu",
 				"View: Toggle Menu"
-			],
-			[
-				"insta",
-				"Package Control: Install Package"
 			],
 			[
 				"men",
@@ -870,9 +871,10 @@
 	},
 	"file_history":
 	[
+		"/H/xdir/new-perl5/my-repos/postmortem/README.md",
+		"/H/xdir/new-perl5/my-repos/postmortem/shit.pl",
 		"/H/xdir/new-perl5/my-repos/postmortem/.gitignore",
 		"/H/xdir/new-perl5/my-repos/postmortem/.gitattributes",
-		"/H/xdir/new-perl5/my-repos/postmortem/README.md",
 		"/H/xdir/javascript/pracs/0007-joose/node_modules/joose/lib/Joose/Managed/Role.js",
 		"/H/xdir/javascript/pracs/0007-joose/node_modules/joose/node_modules/temp/README.md",
 		"/H/xdir/javascript/pracs/0007-joose/node_modules/joose/node_modules/optimist/readme.markdown",
@@ -996,8 +998,7 @@
 		"/C/rakudo/bin/ahk.bat",
 		"/H/xdir/python/0004-flask-reload-on-save-maybe/flask-reload-on-save-maybe.py",
 		"/C/Users/Sisa/Desktop/ahks/tv/zamunda.ahk",
-		"/H/xdir/autohotkey/ahks/Firefox.ahk",
-		"/C/Users/Sisa/AppData/Local/Temp/112_3715/manifest.json"
+		"/H/xdir/autohotkey/ahks/Firefox.ahk"
 	],
 	"find":
 	{
@@ -1164,8 +1165,36 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 383,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								383,
+								383
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -1173,20 +1202,20 @@
 			"sheets":
 			[
 				{
-					"buffer": 0,
+					"buffer": 1,
 					"file": "subs.pl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1714,
+						"buffer_size": 683,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								69,
-								69
+								81,
+								81
 							]
 						],
 						"settings":
@@ -1201,20 +1230,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 2,
 					"file": "Postmortem.pm",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5488,
+						"buffer_size": 4880,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								313,
+								313
 							]
 						],
 						"settings":
@@ -1228,34 +1257,6 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "README.md",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 426,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]

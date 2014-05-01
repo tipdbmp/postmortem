@@ -9,25 +9,10 @@ my @postmortem_msgs;
 END {
     say "\n\n", __PACKAGE__, ":\n";
 
-    @postmortem_msgs = reverse @postmortem_msgs;
-
-    my @fixed_order_postmortem_msgs;
-    for (my $i = 0; $i < @postmortem_msgs; $i++) {
-        my $j = $i + 1;
-        $j++ while defined $postmortem_msgs[$j] && substr($postmortem_msgs[$j], 0, 1) eq ' ';
-        # say "\$i: $i; \$j: $j";
-        push @fixed_order_postmortem_msgs, [ @postmortem_msgs[$i .. $j - 1] ];
-        $i = $j - 1;
-    }
     # use DDP; say p @postmortem_msgs;
-    @fixed_order_postmortem_msgs = reverse @fixed_order_postmortem_msgs;
-    @fixed_order_postmortem_msgs = map { @$_ } @fixed_order_postmortem_msgs;
-    # use DDP; say p @fixed_order_postmortem_msgs;
 
     # say for @postmortem_msgs;
-    # say "$_\n" for @postmortem_msgs;
-
-    say "$_\n" for @fixed_order_postmortem_msgs;
+    say "$_\n" for @postmortem_msgs;
 }
 
 sub import {
@@ -56,6 +41,7 @@ sub examine_package { my ($class, $pkg) = @_;
         # });
 
         for my $sub_name (@sub_names) {
+            # say $sub_name;
             my $sub = \&{"$pkg\::$sub_name"};
             $pkg_stash->add_symbol("&$sub_name", examine_sub($sub, "$pkg\::$sub_name"));
         }
@@ -77,20 +63,7 @@ sub examine_sub { my ($sub, $sub_name) = @_;
         # say $caller_number;
         my $indent = ' ' x (4 * ($caller_number));
 
-        # say "$sub_name(", join(', ', Dumper(@_)),  ") -> ", join(', ', Dumper(@return));
-        # my $postmortem_msg = join '',
-        #    , "$indent$sub_name("
-        #    , join(', ', Dumper(@_))
-        #    ,  ')'
-        #    ;
-        # my @return = $sub->(@_);
-        # # $postmortem_msg .= "\n${indent}returns: " . join(', ', Dumper(@return));
-        # $postmortem_msg .= " -> " . join(', ', Dumper(@return));
-
-        my @return = $sub->(@_);
         my $postmortem_msg = join '',
-            , $indent
-            , join(', ', Dumper(@return))
             , " <- "
             , "$sub_name("
             , join(', ', Dumper(@_))
@@ -98,6 +71,13 @@ sub examine_sub { my ($sub, $sub_name) = @_;
             ;
 
         push @postmortem_msgs, $postmortem_msg;
+        my $current_msg_index  = $#postmortem_msgs;
+        my @return = $sub->(@_);
+        $postmortem_msgs[$current_msg_index] = join '',
+            , $indent
+            , join(', ', Dumper(@return))
+            , $postmortem_msgs[$current_msg_index]
+            ;
 
         return if @return == 0;
         return $return[0] if @return == 1;
