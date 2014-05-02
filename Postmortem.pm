@@ -17,11 +17,17 @@ END {
 
 sub import {
     my $caller_pkg = caller;
-    # say $caller_pkg;
-    examine_package(__PACKAGE__, $caller_pkg);
+    # use DDP; say p @_;
+
+    # [0] ->  __PACKAGE__
+    # [1] -> ignore
+    # [2] -> name_of_sub_to_ignore
+    my @ignored_sub_names = @_[2 .. $#_];
+    # use DDP; say p @ignored_sub_names;
+    __PACKAGE__->examine_package($caller_pkg, \@ignored_sub_names);
 }
 
-sub examine_package { my ($class, $pkg) = @_;
+sub examine_package { my ($class, $pkg, $ignored_sub_names) = @_;
     # say "package: $pkg";
     my $pkg_stash = Package::Stash->new($pkg);
     my @sub_names = $pkg_stash->list_all_symbols('CODE');
@@ -40,7 +46,11 @@ sub examine_package { my ($class, $pkg) = @_;
         #     return @return;
         # });
 
+        $ignored_sub_names ||= [];
+        # use DDP; say p $ignored_sub_names;
+        my $ignored_sub_names_regex = join '|', @$ignored_sub_names;
         for my $sub_name (@sub_names) {
+            next if $ignored_sub_names_regex && $sub_name =~ /$ignored_sub_names_regex/;
             # say $sub_name;
             my $sub = \&{"$pkg\::$sub_name"};
             $pkg_stash->add_symbol("&$sub_name", examine_sub($sub, "$pkg\::$sub_name"));
@@ -113,7 +123,7 @@ sub examine_package_matching { my ($class, $regex) = @_;
     # use DDP; say p @package_names;
     my @matched_packages = grep { /$regex/ } @package_names;
     # use DDP; say p @matched_packages;
-    examine_package(__PACKAGE__, $_) for @matched_packages;
+    __PACKAGE__->examine_package($_) for @matched_packages;
 }
 
 sub _find_packages {

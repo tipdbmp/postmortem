@@ -54,10 +54,10 @@ sub i_am_context_sensitive {
 # }
 
 
-# factors(64);
-# sub factors { my($n) = @_;
-#     grep { $n % $_ == 0 }(1 .. $n);
-# }
+factors(64);
+sub factors { my($n) = @_;
+    grep { $n % $_ == 0 }(1 .. $n);
+}
 
 
 fib_rec(5);
@@ -113,7 +113,8 @@ sub fib_rec { my ($n) = @_;
 
 # Has to be placed after the function definitions so that
 # the typeglobs would show up in the symbol table
-use Postmortem;
+# use Postmortem;
+use Postmortem ignore => qw|fib_rec|;
 
 
 

@@ -74,6 +74,29 @@ Postmortem:
 
             1 <- main::fact(1)
 
+
+
+# You can provide a list of sub names not to be patched
+factors(64);
+sub factors { my($n) = @_;
+    grep { $n % $_ == 0 }(1 .. $n);
+}
+
+fib_rec(5);
+sub fib_rec { my ($n) = @_;
+    $n < 2 ? $n : fib_rec($n - 1) + fib_rec($n - 2);
+}
+
+
+use Postmortem ignore => qw|fib_rect|;
+# output:
+
+
+Postmortem:
+
+1, 2, 4, 8, 16, 32, 64 <- main::factors(64)
+
+
 ```
 
 ### Caveats
