@@ -71,17 +71,39 @@ sub examine_sub { my ($sub, $sub_name) = @_;
             ;
 
         push @postmortem_msgs, $postmortem_msg;
-        my $current_msg_index  = $#postmortem_msgs;
-        my @return = $sub->(@_);
-        $postmortem_msgs[$current_msg_index] = join '',
-            , $indent
-            , join(', ', Dumper(@return))
-            , $postmortem_msgs[$current_msg_index]
-            ;
 
-        return if @return == 0;
-        return $return[0] if @return == 1;
-        return @return;
+        my $current_msg_index  = $#postmortem_msgs;
+
+        my $called_in_list_context   = wantarray;
+        my $called_in_void_context   = !defined $called_in_list_context;
+        my $called_in_scalar_context = !$called_in_void_context;
+
+        if ($called_in_list_context || $called_in_void_context) {
+            my @return = $sub->(@_);
+            $postmortem_msgs[$current_msg_index] = join '',
+                , $indent
+                , join(', ', Dumper(@return))
+                , $postmortem_msgs[$current_msg_index]
+                ;
+            return @return;
+        } elsif ($called_in_scalar_context) {
+            my $return = $sub->(@_);
+            $postmortem_msgs[$current_msg_index] = join '',
+                , $indent
+                , Dumper($return)
+                , $postmortem_msgs[$current_msg_index]
+                ;
+            return $return;
+        }
+        # } elsif ($called_in_void_context) {
+        #     $sub->(@_);
+        #     $postmortem_msgs[$current_msg_index] = join '',
+        #         , $indent
+        #         , '__NOTHING__'
+        #         , $postmortem_msgs[$current_msg_index]
+        #         ;
+        #     return;
+        # }
     }
 }
 
