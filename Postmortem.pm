@@ -49,16 +49,17 @@ sub examine_package { my ($class, $pkg, $ignored_sub_names) = @_;
         $ignored_sub_names ||= [];
         # use DDP; say p $ignored_sub_names;
         my $ignored_sub_names_regex = join '|', @$ignored_sub_names;
+        # say $ignored_sub_names_regex;
         for my $sub_name (@sub_names) {
-            next if $ignored_sub_names_regex && $sub_name =~ /$ignored_sub_names_regex/;
             # say $sub_name;
+            next if $ignored_sub_names_regex && $sub_name =~ /^($ignored_sub_names_regex)$/;
             my $sub = \&{"$pkg\::$sub_name"};
-            $pkg_stash->add_symbol("&$sub_name", examine_sub($sub, "$pkg\::$sub_name"));
+            $pkg_stash->add_symbol("&$sub_name", __PACKAGE__->examine_sub($sub, "$pkg\::$sub_name"));
         }
     }
 }
 
-sub examine_sub { my ($sub, $sub_name) = @_;
+sub examine_sub { my ($class, $sub, $sub_name, $autocurried) = @_;
     $sub_name ||= 'unknown_subname';
     sub {
 
@@ -70,6 +71,7 @@ sub examine_sub { my ($sub, $sub_name) = @_;
         my $caller_number = 1;
         $caller_number++ while defined caller $caller_number;
         $caller_number = int $caller_number / 2;
+        $caller_number -= 1 if $autocurried;
         # say $caller_number;
         my $indent = ' ' x (4 * ($caller_number));
 
