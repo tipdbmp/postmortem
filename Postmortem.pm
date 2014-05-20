@@ -3,7 +3,8 @@ use strict;
 use warnings FATAL => 'all';
 use v5.10;
 use Package::Stash;
-use Data::Dumper;
+# use Data::Dumper;
+use Data::Dump qw|dump|;
 
 my @postmortem_msgs;
 END {
@@ -63,10 +64,6 @@ sub examine_sub { my ($class, $sub, $sub_name, $autocurried) = @_;
     $sub_name ||= 'unknown_subname';
     sub {
 
-        local $Data::Dumper::Indent;
-        $Data::Dumper::Indent = 0;
-        local $Data::Dumper::Terse;
-        $Data::Dumper::Terse = 1;
 
         my $caller_number = 1;
         $caller_number++ while defined caller $caller_number;
@@ -78,7 +75,7 @@ sub examine_sub { my ($class, $sub, $sub_name, $autocurried) = @_;
         my $postmortem_msg = join '',
             , " <- "
             , "$sub_name("
-            , join(', ', Dumper(@_))
+            , join(', ', _dump(@_))
             ,  ')'
             ;
 
@@ -94,7 +91,7 @@ sub examine_sub { my ($class, $sub, $sub_name, $autocurried) = @_;
             my @return = $sub->(@_);
             $postmortem_msgs[$current_msg_index] = join '',
                 , $indent
-                , join(', ', Dumper(@return))
+                , join(', ', _dump(@return))
                 , $postmortem_msgs[$current_msg_index]
                 ;
             return @return;
@@ -102,7 +99,7 @@ sub examine_sub { my ($class, $sub, $sub_name, $autocurried) = @_;
             my $return = $sub->(@_);
             $postmortem_msgs[$current_msg_index] = join '',
                 , $indent
-                , Dumper($return)
+                , _dump($return)
                 , $postmortem_msgs[$current_msg_index]
                 ;
             return $return;
@@ -172,6 +169,22 @@ sub _filter_packages { my (@packages) = @_;
     @packages = grep { !/^$ignored_packages_regex$/o } @packages;
 
     @packages;
+}
+
+sub _dump {
+    # # use Data::Dumper;
+    # require Data::Dumper;
+
+    # local $Data::Dumper::Indent;
+    # $Data::Dumper::Indent = 0;
+    # local $Data::Dumper::Terse;
+    # $Data::Dumper::Terse = 1;
+
+    # Data::Dumper::Dumper(@_);
+
+    # use Data::Dump;
+    require Data::Dump;
+    Data::Dump::dump(@_);
 }
 
 1;
